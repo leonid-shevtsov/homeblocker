@@ -1,0 +1,73 @@
+# The port to listen on (change it to test with an unprivileged account)
+# port: 53
+
+# The upstream DNS server (required)
+# For domains that are not blocked, homeserver will ask the upstream server.
+# It can be your provider's DNS, or a global one.
+#
+# Make sure that your homeblocker can access the upstream.
+# (Are you blocking all other DNS on your router? Make an exception for homeblocker's machine.)
+upstream: 1.1.1.1
+
+# "Blocks" are units of configuration for homeblocker.
+#
+# A block defines a list of domains to block, and a blocking schedule.
+#
+# You can have as many blocks as you want.
+#
+# When resolving a domain name, homeblocker will return an empty result,
+# if
+blocks:
+
+  # The block name is arbitrary and is only here for your convenience.
+  youtube:
+
+    # These exact domains, plus their "www." subdomain, will be blocked
+    domains:
+      - youtube.com
+      - youtube.l.google.com
+
+    # All subdomains of these domains (of any level), but not the domain itself,
+    # will be blocked
+    wildcard_domains:
+      - googlevideo.com
+      - ytimg.com
+
+    # Schedule is a multi-line string in crontab format
+    # Please see https://en.wikipedia.org/wiki/Cron#Overview for usage
+    #
+    # schedule: |
+    #   * 9-17 * * * on
+    #
+    # Note that the schedule isn't used exactly as a crontab.
+    # You do not define *moments* when the blocker comes on or off.
+    # You define *intervals* when it works;
+    # so if an instance of time matches the cron expression,
+    # then the blocker is on or off, based on the cron command.
+    #
+    # How it is applied:
+    # - by default the block is on all the time (if that is what you want just omit the schedule)
+    # - the "command" in the crontab MUST be "on" or "off"
+    # - for an interval the lower bound is inclusive, and the upper is exclusive
+    # - later lines override former lines: last matching line wins
+    #
+    # Some examples:
+
+    # Let the poor kid watch his youtube from 6 PM to 8 PM
+    # (note that the interval is top-open: the block will come back on at 8 PM sharp)
+    #
+    # schedule: |
+    #   * 18-20 * * * off
+
+    # Unblock on the weekends (comma-separated values are not supported)
+    #
+    # schedule: |
+    #   * * * * 0 off
+    #   * * * * 6 off
+
+    # Christmas day is special; finals week is too
+    #
+    # schedule: |
+    #   * 18-20 * * * off
+    #   * * 25 12 * off
+    #   * * 7-14 5 * on

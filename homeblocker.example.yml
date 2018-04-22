@@ -16,7 +16,7 @@ upstream: 1.1.1.1
 # You can have as many blocks as you want.
 #
 # When resolving a domain name, homeblocker will return an empty result,
-# if
+# if any of the blocks is active and matches.
 blocks:
 
   # The block name is arbitrary and is only here for your convenience.
